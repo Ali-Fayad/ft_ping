@@ -24,8 +24,12 @@ void	init_ping(t_ping *ping)
 	ping->recv_addr_len = 0;
 	ping->sequence = 1;
 	ping->rtt_ms = 0.0;
+	ping->rtt_min = 0.0;
+	ping->rtt_max = 0.0;
+	ping->rtt_sum = 0.0;
+	ping->packets_transmitted = 0;
+	ping->packets_received = 0;
 	ping->reply_ttl = 0;
 	ping->verbose = false;
 	ping->help = false;
-	ping->running = true;
 }

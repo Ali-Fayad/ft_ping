@@ -6,7 +6,7 @@
 /*   By: alifayad <alifayad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 17:48:51 by alifayad          #+#    #+#             */
-/*   Updated: 2026/06/08 17:48:56 by alifayad         ###   ########.fr       */
+/*   Updated: 2026/06/09 16:45:49 by alifayad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,16 @@
 
 # define ERR_RECEIVE_PACKET \
 "ft_ping: cannot receive ICMP packet"
+
+#define ERR_SIGINT_HANDLER \
+"ft_ping: failed to setup signal handler"
+
+#define VERBOSE_TIME_EXCEEDED "Time to live exceeded"
+
+#define VERBOSE_DEST_UNREACH "Destination unreachable"
+
+#define VERBOSE_REDIRECT "Redirect"
+
+#define VERBOSE_PARAM_PROB "Parameter problem"
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: alifayad <alifayad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 13:35:20 by alifayad          #+#    #+#             */
-/*   Updated: 2026/06/09 14:18:40 by alifayad         ###   ########.fr       */
+/*   Updated: 2026/06/09 14:58:53 by alifayad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,17 @@ static ssize_t	send_packet(t_ping *ping)
 			(struct sockaddr *)&ping->dest_addr, ping->dest_addr_len));
 }
 
+static void	setup_sigint_handler(t_ping *ping)
+{
+	struct sigaction	sa;
+
+	memset(&sa, 0, sizeof(sa));
+	sa.sa_handler = handle_sigint;
+	sigemptyset(&sa.sa_mask);
+	if (sigaction(SIGINT, &sa, NULL) == -1)
+		exit_with_error(ping, ERR_SIGINT_HANDLER, EXIT_FAILURE);
+}
+
 int	ft_ping_process(t_ping *ping)
 {
 	if (ping->help == true)
@@ -72,16 +83,27 @@ int	ft_ping_process(t_ping *ping)
 	if (open_icmp_socket(ping) != 0)
 		handle_socket_error(ping);
 	print_banner(ping);
-	while (ping->running == true)
+	setup_sigint_handler(ping);
+	while (g_running == 1)
 	{
 		if (build_echo_request(ping, ping->sequence) != 0)
 			exit_with_error(ping, ERR_PACKET_BUILD, EXIT_FAILURE);
 		if (send_packet(ping) < 0)
+		{
+			if (errno == EINTR && g_running == 0)
+				break ;
 			exit_with_error(ping, ERR_RAW_SOCKET, EXIT_FAILURE);
+		}
+		ping->packets_transmitted++;
 		if (receive_packet(ping) != 1)
+		{
+			if (g_running == 0)
+				break ;
 			exit_with_error(ping, ERR_RECEIVE_PACKET, EXIT_FAILURE);
+		}
 		ping->sequence++;
 		sleep(1);
 	}
+	print_statistics(ping);
 	return (EXIT_SUCCESS);
 }

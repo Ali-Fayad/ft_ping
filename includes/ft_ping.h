@@ -6,7 +6,7 @@
 /*   By: alifayad <alifayad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 17:35:27 by alifayad          #+#    #+#             */
-/*   Updated: 2026/06/09 14:21:34 by alifayad         ###   ########.fr       */
+/*   Updated: 2026/06/09 16:45:15 by alifayad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/socket.h>
+# include <signal.h>
 # include "messages.h"
 
 typedef struct s_ping
@@ -46,11 +47,18 @@ typedef struct s_ping
 	struct timeval		send_time;
 	struct timeval		recv_time;
 	double				rtt_ms;
+	double				rtt_min;
+	double				rtt_max;
+	double				rtt_sum;
+	size_t				packets_transmitted;
+	size_t				packets_received;
 	int					reply_ttl;
 	bool				verbose;
 	bool				help;
 	bool				running;
 }	t_ping;
+
+extern volatile sig_atomic_t	g_running;
 
 void		init_ping(t_ping *ping);
 
@@ -77,5 +85,12 @@ int			receive_packet(t_ping *ping);
 int			ft_ping_process(t_ping *ping);
 
 void		handle_socket_error(t_ping *ping);
+
+void		setup_signal_handler(void);
+void		handle_sigint(int sig);
+
+void		print_statistics(t_ping *ping);
+
+void		update_rtt_statistics(t_ping *ping);
 
 #endif
