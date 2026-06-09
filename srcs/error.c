@@ -6,7 +6,7 @@
 /*   By: alifayad <alifayad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 17:37:07 by alifayad          #+#    #+#             */
-/*   Updated: 2026/06/08 17:44:11 by alifayad         ###   ########.fr       */
+/*   Updated: 2026/06/09 13:43:07 by alifayad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,11 @@ void	exit_with_error(t_ping *ping, char *msg, int code)
 	cleanup_ping(ping);
 	print_error(msg);
 	exit(code);
+}
+
+void	handle_socket_error(t_ping *ping)
+{
+	if (errno == EPERM || errno == EACCES)
+		exit_with_error(ping, ERR_RAW_SOCKET_PERM, EXIT_FAILURE);
+	exit_with_error(ping, ERR_RAW_SOCKET, EXIT_FAILURE);
 }

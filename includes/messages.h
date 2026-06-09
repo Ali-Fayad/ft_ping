@@ -40,4 +40,16 @@
 # define ERR_RESOLVE_TARGET \
 "ft_ping: cannot resolve host"
 
+# define ERR_RAW_SOCKET \
+"ft_ping: raw socket error"
+
+# define ERR_RAW_SOCKET_PERM \
+"ft_ping: raw socket requires root privileges"
+
+# define ERR_PACKET_BUILD \
+"ft_ping: cannot build ICMP packet"
+
+# define ERR_RECEIVE_PACKET \
+"ft_ping: cannot receive ICMP packet"
+
 #endif

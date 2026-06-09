@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alifayad <alifayad@student.42.fr>          +#+#+#+#+#+   +#+           */
-/*                                                +#+#+#+#+#+   +#+            */
-/*   Created: 2026/06/09 13:10:22 by alifayad          #+#    #+#             */
-/*   Updated: 2026/06/09 13:10:22 by alifayad         ###   ########.fr       */
+/*   By: alifayad <alifayad@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/09 13:35:20 by alifayad          #+#    #+#             */
+/*   Updated: 2026/06/09 14:18:40 by alifayad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,11 @@ static void	print_banner(t_ping *ping)
 	write(STDOUT_FILENO, PING_MSG_BYTES, sizeof(PING_MSG_BYTES) - 1);
 }
 
-static ssize_t	send_packet(t_ping *ping, char *packet, size_t size)
+static ssize_t	send_packet(t_ping *ping)
 {
-	if (ping->sockfd < 0)
-		return (0);
-	return (sendto(ping->sockfd, packet, size, 0,
+	if (gettimeofday(&ping->send_time, NULL) != 0)
+		return (-1);
+	return (sendto(ping->sockfd, ping->packet, ping->packet_size, 0,
 			(struct sockaddr *)&ping->dest_addr, ping->dest_addr_len));
 }
 
@@ -69,7 +69,19 @@ int	ft_ping_process(t_ping *ping)
 		return (EXIT_SUCCESS);
 	}
 	resolve_target(ping);
+	if (open_icmp_socket(ping) != 0)
+		handle_socket_error(ping);
 	print_banner(ping);
-	send_packet(ping, NULL, 0);
+	while (ping->running == true)
+	{
+		if (build_echo_request(ping, ping->sequence) != 0)
+			exit_with_error(ping, ERR_PACKET_BUILD, EXIT_FAILURE);
+		if (send_packet(ping) < 0)
+			exit_with_error(ping, ERR_RAW_SOCKET, EXIT_FAILURE);
+		if (receive_packet(ping) != 1)
+			exit_with_error(ping, ERR_RECEIVE_PACKET, EXIT_FAILURE);
+		ping->sequence++;
+		sleep(1);
+	}
 	return (EXIT_SUCCESS);
 }
