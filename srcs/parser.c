@@ -6,7 +6,7 @@
 /*   By: alifayad <alifayad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 17:36:54 by alifayad          #+#    #+#             */
-/*   Updated: 2026/06/08 17:36:58 by alifayad         ###   ########.fr       */
+/*   Updated: 2026/06/08 17:44:17 by alifayad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,16 @@ static void	parse_option(char *arg, t_ping *ping)
 	else if (arg[1] == '?' && arg[2] == '\0')
 		ping->help = true;
 	else
-		exit_with_error(
-			ping,
-			"ft_ping: invalid option",
-			EXIT_FAILURE);
+		exit_with_error(ping, ERR_INVALID_OPTION, EXIT_FAILURE);
 }
 
 static void	parse_target(char *arg, t_ping *ping)
 {
-	if (ping->hostname != NULL)
+	if (ping->target != NULL)
 	{
-		exit_with_error(
-			ping,
-			"ft_ping: too many arguments",
-			EXIT_FAILURE);
+		exit_with_error(ping, ERR_TOO_MANY_ARGS, EXIT_FAILURE);
 	}
-	ping->hostname = arg;
+	ping->target = arg;
 }
 
 void	parse_args(int argc, char **argv, t_ping *ping)
@@ -55,11 +49,8 @@ void	parse_args(int argc, char **argv, t_ping *ping)
 			parse_target(argv[i], ping);
 		i++;
 	}
-	if (ping->hostname == NULL && ping->help == false)
+	if (ping->target == NULL && ping->help == false)
 	{
-		exit_with_error(
-			ping,
-			"ft_ping: missing host operand",
-			EXIT_FAILURE);
+		exit_with_error(ping, ERR_MISSING_HOST, EXIT_FAILURE);
 	}
 }

@@ -6,11 +6,16 @@
 /*   By: alifayad <alifayad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 17:37:07 by alifayad          #+#    #+#             */
-/*   Updated: 2026/06/08 17:37:09 by alifayad         ###   ########.fr       */
+/*   Updated: 2026/06/08 17:44:11 by alifayad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
+
+void	print_help(void)
+{
+	write(STDOUT_FILENO, HELP_MSG, sizeof(HELP_MSG) - 1);
+}
 
 static void	print_error(char *msg)
 {

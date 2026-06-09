@@ -6,7 +6,7 @@
 /*   By: alifayad <alifayad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 17:37:22 by alifayad          #+#    #+#             */
-/*   Updated: 2026/06/08 17:37:24 by alifayad         ###   ########.fr       */
+/*   Updated: 2026/06/08 17:44:09 by alifayad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,7 @@
 
 void	cleanup_ping(t_ping *ping)
 {
-	(void)ping;
+	if (ping->sockfd >= 0)
+		close(ping->sockfd);
+	ping->sockfd = -1;
 }

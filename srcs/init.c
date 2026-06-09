@@ -14,7 +14,12 @@
 
 void	init_ping(t_ping *ping)
 {
-	ping->hostname = NULL;
+	ping->target = NULL;
+	ping->resolved_ip[0] = '\0';
+	ping->dest_addr_len = 0;
+	ping->sockfd = -1;
+	ping->payload_size = PING_PAYLOAD_SIZE;
+	ping->packet_size = PING_PAYLOAD_SIZE;
 	ping->verbose = false;
 	ping->help = false;
 }
